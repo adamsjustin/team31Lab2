@@ -1,10 +1,11 @@
 import pytest
+import mock
+import builtins
 from invoice import Invoice
-
 
 @pytest.fixture
 def qnt():
-    pytest.qnt = 50
+    pytest.qnt = "y"
 
 
 @pytest.fixture
@@ -45,3 +46,13 @@ def test_can_calculate_total_pure_price(invoice, products):
 def test_can_add_product(invoice, qnt, price, discount):
     assert invoice.addProduct(pytest.qnt, pytest.price, pytest.discount) \
            == {'qnt': pytest.qnt, 'price': pytest.price, 'discount': pytest.discount}
+
+
+def test_can_input_answer_yes(invoice):
+    with mock.patch.object(builtins, 'input', lambda x: 'y'):
+        assert invoice.inputAnswer('Test') == 'y'
+
+
+def test_can_input_answer_no(invoice):
+    with mock.patch.object(builtins, 'input', lambda x: 'n'):
+        assert invoice.inputAnswer('Test') == 'n'
